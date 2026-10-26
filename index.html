@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Crea y descarga tu currículum profesional en PDF ligero." />
+  <title>CV Pro — Generador de Currículum</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand"><span class="brand-mark">CV</span><span>CV Pro</span></div>
+      <button type="button" id="themeToggle" class="icon-btn" aria-label="Cambiar tema">🌙</button>
+    </nav>
+    <div class="hero-content">
+      <div class="hero-copy">
+        <span class="badge">✨ Fácil · Profesional · PDF ligero</span>
+        <h1>Crea tu CV profesional en pocos minutos</h1>
+        <p>Elige un diseño, completa tus datos, personaliza el color y descarga un currículum listo para presentar.</p>
+        <div class="hero-points"><span>✓ Vista previa en vivo</span><span>✓ 7 pasos · 6 diseños · 100% editable</span><span>✓ Optimizado para PDF</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="features">
+    <div class="feature-card"><span>⚡</span><div><strong>Rápido</strong><small>Completa tu CV paso a paso.</small></div></div>
+    <div class="feature-card"><span>🎨</span><div><strong>Personalizable</strong><small>Diseños y colores a tu gusto.</small></div></div>
+    <div class="feature-card"><span>📄</span><div><strong>PDF ligero</strong><small>Ideal para compartir y enviar.</small></div></div>
+  </section>
+
+  <main class="app">
+<section class="panel form-panel">
+<div class="section-heading"><div><span class="eyebrow">PASO <span id="stepNumber">1</span> DE 7</span><h2 id="stepTitle"></h2></div><span id="progressText"></span></div>
+<div class="progress"><span id="progressBar"></span></div><div class="dots" id="dots"></div>
+<form id="cvForm" onsubmit="return false">
+<div class="step active" data-step="1"><div class="intro-note">👋 Empecemos con tus datos principales. Lo que escribas aparece al instante en la vista previa.</div>
+<div class="grid"><div class="field"><label>Nombre completo</label><input type="text" data-k="nombre" placeholder="Ej: María López"></div><div class="field"><label>Profesión / Cargo deseado</label><input type="text" data-k="cargo" placeholder="Ej: Asistente administrativa"></div><div class="field"><label>Correo electrónico</label><input type="email" data-k="correo" placeholder="correo@ejemplo.com"></div><div class="field"><label>Teléfono / WhatsApp</label><input type="tel" data-k="telefono" placeholder="Ej: +591 77122272"></div><div class="field"><label>Ciudad / País</label><input type="text" data-k="ubicacion" placeholder="Ej: Santa Cruz, Bolivia"></div><div class="field"><label>LinkedIn / Portafolio (opcional)</label><input type="text" data-k="linkedin" placeholder="https://..."></div><div class="field"><label>Fecha de nacimiento (opcional)</label><input type="text" data-k="nacimiento" placeholder="Ej: 12/05/2003"></div><div class="field"><label>Nacionalidad (opcional)</label><input type="text" data-k="nacionalidad" placeholder="Ej: Boliviana"></div>
+<div class="field"><label>Estado civil (opcional)</label><select data-k="civil"><option value="">— No indicar —</option><option>Soltero/a</option><option>Casado/a</option><option>Divorciado/a</option><option>Viudo/a</option><option>Unión libre</option></select></div></div>
+<div class="photo-box"><label>Fotografía</label><div class="photo-actions"><button type="button" id="btnGaleria">📷 Subir foto</button><button type="button" id="btnCamara">📸 Abrir cámara</button><button type="button" id="btnQuitarFoto">✕ Quitar</button></div><input type="file" id="fotoGaleria" accept="image/*" class="hidden"><input type="file" id="fotoCamara" accept="image/*" capture="user" class="hidden"><small>Podrás mover y hacer zoom para recortarla en círculo.</small></div>
+<div class="tipbox">💡 Las empresas piden como mínimo nombre, teléfono y correo. Usa un correo serio (nombre.apellido) y evita datos sensibles como CI o dirección exacta. La foto es opcional: si la pones, fondo claro y ropa formal.</div></div>
+<div class="step" data-step="2"><div class="intro-note">💼 Cuenta en 3–5 líneas quién eres y qué puedes aportar.</div>
+<div class="field"><label>Perfil profesional</label><textarea data-k="perfil" rows="7" placeholder="Describe tu experiencia, habilidades y objetivo."></textarea></div>
+<label>Sugerencias (clic para usar y luego edítala a tu gusto)</label><div class="chips" id="c_perfil"></div>
+<div class="tipbox">💡 Reemplaza lo que está entre [corchetes] con tus datos. Menciona el puesto que buscas y 2–3 fortalezas reales.</div></div>
+<div class="step" data-step="3"><div class="intro-note">🏢 Empieza por tu trabajo más reciente. Si no tienes experiencia, agrega prácticas, pasantías, voluntariado o trabajos por cuenta propia.</div>
+<div id="l_exp"></div><button type="button" class="add-btn" data-add="exp">＋ Agregar experiencia</button>
+<label style="margin-top:14px">Frases sugeridas (clic en el campo de funciones y luego en la frase)</label><div class="chips" id="c_exp"></div>
+<div class="tipbox">💡 Usa verbos de acción (atendí, organicé, elaboré) y, si puedes, cifras: «atendí a +40 clientes diarios».</div></div>
+<div class="step" data-step="4"><div class="intro-note">🎓 Estudios y cursos que respalden tu perfil.</div>
+<h3 class="sub">Formación académica</h3><div id="l_edu"></div><button type="button" class="add-btn" data-add="edu">＋ Agregar estudio</button><h3 class="sub">Cursos y certificaciones</h3><div id="l_cursos"></div><button type="button" class="add-btn" data-add="cursos">＋ Agregar curso</button>
+<div class="tipbox">💡 Ordena del más reciente al más antiguo (usa las flechas ↑ ↓ de cada tarjeta). Si aún estudias, escribe «En curso».</div></div>
+<div class="step" data-step="5"><div class="intro-note">🚀 Habilidades separadas por comas e idiomas.</div>
+<div class="field"><label>Habilidades</label><textarea data-k="habilidades" rows="4" placeholder="Ej: Excel, atención al cliente, liderazgo"></textarea></div>
+<label>Sugerencias (clic para agregar)</label><div class="chips" id="c_hab"></div>
+<h3 class="sub">Idiomas</h3><div id="l_idi"></div><button type="button" class="add-btn" data-add="idi">＋ Agregar idioma</button>
+<div class="tipbox">💡 Elige habilidades que se relacionen con el puesto al que postulas. Mejor 6–10 reales que 20 inventadas.</div></div>
+<div class="step" data-step="6"><div class="intro-note">📎 Referencias e información adicional que muchos empleadores solicitan.</div>
+<h3 class="sub">Referencias</h3><div id="l_refs"></div><button type="button" class="add-btn" data-add="refs">＋ Agregar referencia</button>
+<div class="field" style="margin-top:14px"><label>Información adicional</label><textarea data-k="extras" rows="4" placeholder="Licencia de conducir, disponibilidad, etc."></textarea></div><div class="chips" id="c_extras"></div>
+<div class="tipbox">💡 Pide permiso antes de poner a alguien como referencia. Si no tienes, puedes ocultar esa sección en el paso 7.</div></div>
+<div class="step" data-step="7"><div class="intro-note">🎨 Personaliza el diseño y decide cómo se acomodan tus datos.</div>
+<div class="modelos"><label>Diseño</label><div class="model-buttons"><button type="button" class="modelo-btn" data-modelo="modelo1">1 · Clásico</button><button type="button" class="modelo-btn" data-modelo="modelo2">2 · Fresco</button><button type="button" class="modelo-btn" data-modelo="modelo3">3 · Creativo</button><button type="button" class="modelo-btn" data-modelo="modelo4">4 · Minimal</button><button type="button" class="modelo-btn" data-modelo="modelo5">5 · Ejecutivo</button><button type="button" class="modelo-btn" data-modelo="modelo6">6 · Moderno</button></div></div>
+<div class="color-picker"><label>Color principal</label><div class="color-options"><button type="button" class="color-btn" data-color="#2563eb" style="--swatch:#2563eb" aria-label="Azul"></button><button type="button" class="color-btn" data-color="#7c3aed" style="--swatch:#7c3aed" aria-label="Morado"></button><button type="button" class="color-btn" data-color="#059669" style="--swatch:#059669" aria-label="Verde"></button><button type="button" class="color-btn" data-color="#ea580c" style="--swatch:#ea580c" aria-label="Naranja"></button><button type="button" class="color-btn" data-color="#db2777" style="--swatch:#db2777" aria-label="Rosa"></button><button type="button" class="color-btn" data-color="#334155" style="--swatch:#334155" aria-label="Grafito"></button><input type="color" data-c="color" class="color-free" aria-label="Color personalizado" title="Color personalizado"></div></div>
+<div class="grid"><div class="field"><label>Tipo de letra</label><select data-c="fuente"><option value="Arial, sans-serif">Arial</option><option value="'Trebuchet MS', sans-serif">Trebuchet</option><option value="Georgia, serif">Georgia (elegante)</option><option value="'Times New Roman', serif">Times New Roman</option><option value="'Courier New', monospace">Courier (técnico)</option></select></div>
+<div class="field"><label>Habilidades se muestran como</label><select data-c="hab"><option value="lista">Lista con viñetas</option><option value="tags">Etiquetas</option></select></div>
+<div class="field"><label>Calidad del PDF</label><select data-c="calidad"><option value="1">Ligero (menos peso)</option><option value="1.5">Normal</option><option value="2">Alta (más nítido)</option></select></div></div>
+<h3 class="sub">Tus secciones: muestra, renombra y reordena</h3><div id="secList"></div>
+<h3 class="sub">Revisión de calidad</h3><div id="check"></div></div>
+<div class="step-nav"><button type="button" id="btnAnterior" class="secondary hidden">← Anterior</button><button type="button" id="btnSiguiente" class="primary">Siguiente →</button></div>
+<div class="actions"><button type="button" id="btnPDF" class="primary">⬇ Descargar PDF</button><button type="button" id="btnEjemplo">✨ Ver ejemplo</button></div>
+<div class="actions2"><button type="button" id="btnExport">💾 Guardar archivo</button><button type="button" id="btnImport">📂 Abrir archivo</button><button type="button" id="btnReset">🗑 Borrar todo</button><input type="file" id="fileImport" accept=".json" class="hidden"></div>
+<p id="mensaje" class="mensaje"></p><small>Tus datos se guardan solos en este navegador y nunca se envían a ningún servidor.</small>
+</form></section>
+<section class="preview-wrap"><div class="preview-toolbar"><div><span class="eyebrow">VISTA PREVIA</span><h2>Tu currículum</h2></div><span class="paper-size" id="pages">Carta · 1 pág.</span></div>
+<div class="preview-stage" id="stage"><div id="cvBox" class="cv-box"><article id="cvPreview" class="cv-page modelo1"></article></div></div>
+<div class="preview-tip">✨ Si tu CV pasa de una hoja, el PDF se genera en varias páginas (línea roja = corte).</div></section></main>
+<div id="cropModal" class="crop-modal hidden"><div class="crop-card"><div class="modal-title"><div><span class="eyebrow">FOTOGRAFÍA</span><h2>Recortar fotografía</h2></div><button type="button" id="closeCrop" class="close-btn" aria-label="Cerrar">×</button></div><p>Mueve la foto y usa el zoom para elegir la parte que aparecerá en el currículum.</p><div class="crop-area"><canvas id="cropCanvas" width="360" height="360"></canvas><div class="circle-guide"></div></div><label class="zoom-label">Zoom</label><input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1"><div class="crop-actions"><button type="button" id="cancelCrop">Cancelar</button><button type="button" id="applyCrop" class="primary">✓ Usar esta foto</button></div></div></div>
+</body></html>
